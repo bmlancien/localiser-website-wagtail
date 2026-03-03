@@ -42,6 +42,16 @@ The project uses [Tailwind CSS v4](https://tailwindcss.com).
 | `localiser_website/static/css/input.css` | Tailwind source — add custom styles here |
 | `localiser_website/static/css/localiser_website.css` | Compiled output — do not edit directly |
 
+### Other CSS commands
+
+```bash
+# Watch only (no Django server)
+npm run watch:css
+
+# Production build (minified)
+npm run build:css
+```
+
 ## Content blocks & StreamField
 
 Wagtail's StreamField lets content creators freely add, remove, and reorder content modules on a page — without touching code. Think of it as a lightweight page builder built into the CMS.
@@ -87,9 +97,9 @@ Renders the block's output. `value` holds the fields defined above.
 
 ### Two ways a dev can use a block
 
-**Fixed position** — the block is hardcoded into a specific spot in a template. The content creator can only edit its fields, not move or remove it. Example: the hero CTA button in `home_page.html`.
+**Fixed position** — the block is hardcoded into a specific spot in a template. The content creator can only edit its fields, not move or remove it.
 
-**Inside a StreamField** — the block is added to a StreamField alongside other blocks. The content creator can add it anywhere on the page, reorder it, duplicate it, or remove it entirely. Example: the `content` StreamField on the home page.
+**Inside a StreamField** — the block is added to a StreamField alongside other blocks. The content creator can add it anywhere on the page, reorder it, duplicate it, or remove it entirely.
 
 To add a new block to the StreamField, register it in the `StreamField` definition in `models.py`, then run a migration:
 
@@ -102,13 +112,3 @@ content = StreamField([
 ```
 
 The block then appears automatically in the admin's block picker — no further changes needed.
-
-### Other CSS commands
-
-```bash
-# Watch only (no Django server)
-npm run watch:css
-
-# Production build (minified)
-npm run build:css
-```
