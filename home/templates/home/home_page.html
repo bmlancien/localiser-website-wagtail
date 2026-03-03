@@ -7,16 +7,25 @@
 
 <!-- replace everything below with: -->
 {% block content %}
-  <div class="bg-red-200">
-    <h1>{{ page.title }}</h1>
-    {% image page.image fill-800x400 %}
-    <p>{{ page.hero_text }}</p>
-    {% if page.hero_cta_link %}
-      <a href="{% pageurl page.hero_cta_link %}">
-        {% firstof page.hero_cta page.hero_cta_link.title %}
-      </a>
-    {% endif %}
-  </div>
-
+<section class="bg-blue-200">
+  <h1>{{ page.title }}</h1>
+  {% image page.image fill-800x400 %}
+  <p>{{ page.hero_text }}</p>
+  {% if page.hero_cta_link %}
+    <a href="{% pageurl page.hero_cta_link %}" class="{{ page.hero_cta_style }}">
+      {% firstof page.hero_cta page.hero_cta_link.title %}
+    </a>
+  {% endif %}
+</section>
   {{ page.body|richtext }}
+
+{% if page.content %}
+<section class="py-8 px-4">
+  {% for block in page.content %}
+    <div class="my-4">
+      {% include_block block %}
+    </div>
+  {% endfor %}
+</section>
+{% endif %}
 {% endblock %}
