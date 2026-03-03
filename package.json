@@ -1,0 +1,14 @@
+{
+  "name": "localiser-website",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./localiser_website/static/css/input.css -o ./localiser_website/static/css/localiser_website.css --minify",
+    "watch:css": "tailwindcss -i ./localiser_website/static/css/input.css -o ./localiser_website/static/css/localiser_website.css --watch",
+    "dev": "concurrently -n django,tailwind -c blue,yellow 'python manage.py runserver' 'npm run watch:css'"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.0.0"
+  }
+}
