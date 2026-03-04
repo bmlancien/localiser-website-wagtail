@@ -1,0 +1,79 @@
+{% load wagtailcore_tags %}
+
+<nav class="bg-white border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 shrink-0">
+        <div class="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/>
+          </svg>
+        </div>
+        <span class="font-bold text-gray-900 text-lg tracking-tight">Localiser</span>
+      </a>
+
+      <!-- Desktop nav links -->
+      <div class="hidden md:flex items-center gap-6">
+        {% for nav_page in nav_pages %}
+          <a href="{% pageurl nav_page %}"
+            class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors
+                   {% if request.path == nav_page.url %}text-blue-600{% endif %}">
+            {{ nav_page.title }}
+          </a>
+        {% endfor %}
+      </div>
+
+      <!-- Desktop CTA -->
+      <div class="hidden md:flex items-center">
+        <a href="#" class="btn-primary text-sm px-4 py-2 rounded-md font-medium">
+          Request demo
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="nav-toggle" class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+        aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
+        <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100">
+    <div class="px-4 py-3 flex flex-col gap-1">
+      {% for nav_page in nav_pages %}
+        <a href="{% pageurl nav_page %}"
+          class="text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md px-3 py-2 transition-colors">
+          {{ nav_page.title }}
+        </a>
+      {% endfor %}
+      <a href="#" class="mt-2 btn-primary text-sm text-center px-4 py-2 rounded-md font-medium">
+        Request demo
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  (function () {
+    const btn = document.getElementById('nav-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+    btn.addEventListener('click', function () {
+      const open = menu.classList.toggle('hidden');
+      iconOpen.classList.toggle('hidden', !open);
+      iconClose.classList.toggle('hidden', open);
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  })();
+</script>

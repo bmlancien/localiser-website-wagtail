@@ -34,6 +34,8 @@
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
+        {% include "partials/navbar.html" %}
+
         {% block content %}{% endblock %}
 
         {# Global javascript #}
