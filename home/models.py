@@ -92,3 +92,7 @@ class HomePage(Page):
         FieldPanel('body'),
         FieldPanel('content'),
     ]
+
+
+class HydrogenPage(Page):
+    pass

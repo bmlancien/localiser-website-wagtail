@@ -112,3 +112,34 @@ content = StreamField([
 ```
 
 The block then appears automatically in the admin's block picker — no further changes needed.
+
+---
+
+## How to create a new Wagtail page
+
+1. Add a model in home/models.py:
+
+```python
+class MyPage(Page):
+    pass  # add fields here later
+```
+
+For a page with content fields, subclass Page, add Django/Wagtail fields, and list them in content_panels.
+
+2. Create a template at home/templates/home/my_page.html (snake_case of the class name):
+
+```html
+{% extends "base.html" %}
+
+{% block content %}
+{% endblock %}
+```
+
+3. Run migrations:
+
+```python
+python manage.py makemigrations home
+python manage.py migrate
+```
+
+4. Add it in Wagtail admin — go to Pages, pick a parent, click "Add child page", and select your new page type.
