@@ -17,12 +17,33 @@
 
       <!-- Desktop nav links -->
       <div class="hidden md:flex items-center gap-6">
-        {% for nav_page in nav_pages %}
-          <a href="{% pageurl nav_page %}"
-            class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors
-                   {% if request.path == nav_page.url %}text-blue-600{% endif %}">
-            {{ nav_page.title }}
-          </a>
+        {% for item in nav_pages %}
+          {% if item.children %}
+            <!-- Dropdown -->
+            <div class="relative" data-dropdown>
+              <a href="{% pageurl item.page %}" data-dropdown-btn class="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                {{ item.page.title }}
+                <svg data-dropdown-chevron class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </a>
+              <div data-dropdown-panel class="hidden absolute left-0 top-full pt-2 z-50">
+                <div class="bg-white border border-gray-200 rounded-md shadow-lg py-1 min-w-40">
+                  {% for child in item.children %}
+                    <a href="{% pageurl child %}"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                      {{ child.title }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <a href="{% pageurl item.page %}"
+              class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              {{ item.page.title }}
+            </a>
+          {% endif %}
         {% endfor %}
       </div>
 
@@ -50,11 +71,17 @@
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100">
     <div class="px-4 py-3 flex flex-col gap-1">
-      {% for nav_page in nav_pages %}
-        <a href="{% pageurl nav_page %}"
+      {% for item in nav_pages %}
+        <a href="{% pageurl item.page %}"
           class="text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md px-3 py-2 transition-colors">
-          {{ nav_page.title }}
+          {{ item.page.title }}
         </a>
+        {% for child in item.children %}
+          <a href="{% pageurl child %}"
+            class="text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-md pl-6 pr-3 py-2 transition-colors">
+            {{ child.title }}
+          </a>
+        {% endfor %}
       {% endfor %}
       <a href="#" class="mt-2 btn-primary text-sm text-center px-4 py-2 rounded-md font-medium">
         Request demo
@@ -65,6 +92,7 @@
 
 <script>
   (function () {
+    // Mobile menu toggle
     const btn = document.getElementById('nav-toggle');
     const menu = document.getElementById('mobile-menu');
     const iconOpen = document.getElementById('icon-open');
@@ -74,6 +102,20 @@
       iconOpen.classList.toggle('hidden', !open);
       iconClose.classList.toggle('hidden', open);
       btn.setAttribute('aria-expanded', String(!open));
+    });
+
+    // Desktop dropdowns — open on hover
+    document.querySelectorAll('[data-dropdown]').forEach(function (dropdown) {
+      const panel = dropdown.querySelector('[data-dropdown-panel]');
+      const chevron = dropdown.querySelector('[data-dropdown-chevron]');
+      dropdown.addEventListener('mouseenter', function () {
+        panel.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+      });
+      dropdown.addEventListener('mouseleave', function () {
+        panel.classList.add('hidden');
+        chevron.style.transform = '';
+      });
     });
   })();
 </script>

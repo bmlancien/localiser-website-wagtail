@@ -96,3 +96,6 @@ class HomePage(Page):
 
 class HydrogenPage(Page):
     pass
+
+class HydrogenRegistrationPage(Page):
+    pass
