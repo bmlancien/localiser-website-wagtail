@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags static %}
 
 {% block body_class %}template-homepage{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="w-full flex flex-col gap-24 items-center py-24 px-6" style="background: linear-gradient(92.91360569416416deg, rgb(7, 103, 159) 6.86%, rgb(5, 93, 144) 51.014%, rgb(3, 82, 128) 95.168%);">
+<section class="w-full flex flex-col gap-24 items-center py-24 px-6" style="background: linear-gradient(92.91360569416416deg, rgba(7, 103, 159, 0.5) 6.86%, rgba(5, 93, 144, 0.75) 51.014%, rgba(3, 82, 128, 0.8) 95.168%), url('{% static "images/berlin_map_blue.png" %}') center/cover no-repeat;">
   <div class="flex flex-col gap-6 items-start max-w-4xl text-white">
     <h1 class="font-bold text-5xl leading-normal w-full">{{ page.hero_title }}</h1>
     <p class="font-light text-3xl leading-tight w-full">{{ page.hero_subtitle }}</p>
