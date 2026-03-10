@@ -12,9 +12,9 @@
     <p class="font-light text-3xl leading-tight w-full">{{ page.hero_subtitle }}</p>
   </div>
 
-  <div class="flex flex-col gap-4 items-start max-w-4xl">
+  <div class="flex flex-col gap-4 items-start w-full max-w-4xl">
     {% if page.hero_cta_text %}
-      <a href="{% if page.hero_cta_link %}{% pageurl page.hero_cta_link %}{% endif %}" class="inline-block px-6 py-3 rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition-colors text-lg tracking-wide">
+      <a href="{% if page.hero_cta_link %}{% pageurl page.hero_cta_link %}{% endif %}" class="btn {{ page.hero_cta_style }} btn-md">
         {{ page.hero_cta_text }}
       </a>
     {% endif %}

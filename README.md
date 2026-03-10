@@ -42,6 +42,49 @@ The project uses [Tailwind CSS v4](https://tailwindcss.com).
 | `localiser_website/static/css/input.css` | Tailwind source — add custom styles here |
 | `localiser_website/static/css/localiser_website.css` | Compiled output — do not edit directly |
 
+### Brand colors
+
+Defined in `@theme` in `input.css` and available as Tailwind utilities everywhere:
+
+| Token | Hex | Utilities |
+|---|---|---|
+| `primary` | `#07679F` | `bg-primary`, `text-primary`, `border-primary` |
+| `secondary` | `#D82B50` | `bg-secondary`, `text-secondary`, `border-secondary` |
+
+---
+
+## Buttons
+
+Always combine `.btn` + a variant + a size. Icons (SVG elements) inside the button align automatically.
+
+```html
+<!-- Variants -->
+<a class="btn btn-primary btn-md">Label</a>
+<a class="btn btn-secondary btn-md">Label</a>
+<a class="btn btn-white btn-md">Label</a>
+<a class="btn btn-outline btn-md">Label</a>
+
+<!-- Sizes: btn-md (base) or btn-sm -->
+<a class="btn btn-primary btn-sm">Small</a>
+
+<!-- With icon at start or end -->
+<a class="btn btn-primary btn-md"><svg ...></svg> Label</a>
+<a class="btn btn-outline btn-sm">Label <svg ...></svg></a>
+```
+
+| Class | Description |
+|---|---|
+| `btn-primary` | Blue background, white text |
+| `btn-secondary` | Pink/red background, white text |
+| `btn-white` | White background, blue text |
+| `btn-outline` | Blue border and text, transparent bg |
+| `btn-md` | Base size — `px-6 py-3 text-lg` |
+| `btn-sm` | Small — `px-4 py-2 text-sm` |
+
+Content creators can choose the variant via the admin (e.g. the CTA button style on the home page). Size is set by the developer in the template.
+
+---
+
 ### Other CSS commands
 
 ```bash
