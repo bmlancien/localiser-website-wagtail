@@ -1,0 +1,24 @@
+{% load wagtailimages_tags %}
+<div class="card">
+  {% if value.image %}
+    {% image value.image original as img %}
+    <div class="flex gap-6 items-start">
+      <img src="{{ img.url }}" alt="{{ img.alt }}" class="max-h-24 w-auto flex-shrink-0">
+      <div class="flex flex-col gap-4 flex-1">
+        {% if value.supertitle %}
+          <p class="font-light text-lg text-primary">{{ value.supertitle }}</p>
+        {% endif %}
+        <h2 class="font-bold text-2xl text-body-text">{{ value.title }}</h2>
+        <div class="font-light text-lg text-body-text leading-relaxed">{{ value.text }}</div>
+      </div>
+    </div>
+  {% else %}
+    <div class="flex flex-col gap-1 mb-6">
+      {% if value.supertitle %}
+        <p class="font-light text-lg text-primary">{{ value.supertitle }}</p>
+      {% endif %}
+      <h2 class="font-bold text-2xl text-body-text">{{ value.title }}</h2>
+    </div>
+    <div class="font-light text-lg text-body-text leading-relaxed">{{ value.text }}</div>
+  {% endif %}
+</div>
