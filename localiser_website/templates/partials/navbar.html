@@ -1,4 +1,4 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags i18n_tags %}
 
 <nav class="bg-white border-b border-gray-200">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,6 +47,19 @@
         {% endfor %}
       </div>
 
+      <!-- Language switcher -->
+      {% get_page_translations as translations %}
+      {% if translations %}
+      <div class="hidden md:flex items-center gap-1">
+        {% for translation in translations %}
+          <a href="{{ translation.url }}"
+            class="text-xs font-medium px-2 py-1 rounded {% if translation.locale == page.locale %}text-primary border border-primary{% else %}text-gray-400 hover:text-gray-700{% endif %}">
+            {{ translation.locale.language_code|upper }}
+          </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center">
         <a href="#" class="btn-primary text-sm px-4 py-2 rounded-md font-medium">
@@ -83,6 +96,16 @@
           </a>
         {% endfor %}
       {% endfor %}
+      {% if translations %}
+      <div class="flex gap-1 mt-2">
+        {% for translation in translations %}
+          <a href="{{ translation.url }}"
+            class="text-xs font-medium px-2 py-1 rounded {% if translation.locale == page.locale %}text-primary border border-primary{% else %}text-gray-400 hover:text-gray-700{% endif %}">
+            {{ translation.locale.language_code|upper }}
+          </a>
+        {% endfor %}
+      </div>
+      {% endif %}
       <a href="#" class="mt-2 btn-primary text-sm text-center px-4 py-2 rounded-md font-medium">
         Request demo
       </a>

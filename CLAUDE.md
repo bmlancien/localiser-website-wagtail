@@ -96,6 +96,34 @@ Fields for horizontal card: `supertitle` (optional), `title`, `text` (rich text)
 
 ---
 
+## Internationalisation (i18n)
+
+- **Package:** wagtail-localize 1.13
+- **Languages:** DE (default/source), EN, FR, ES
+- **German has no URL prefix** — pages stay at `/`. Other languages: `/en/`, `/fr/`, `/es/`
+- German is the source language. All content is created in German first, then translated.
+
+### Translation workflow (admin)
+1. Create/edit the page in German as normal
+2. In the page editor, click **Translate** → select target languages
+3. Translators edit field-by-field in the translation editor
+4. Publish the translation
+
+### What can be translated per field
+- Text fields (CharField, RichTextField): fully translatable
+- Image fields: can be overridden per language (different image per locale)
+- Block structure (which blocks exist, their order): **cannot differ per language** — structure mirrors the source
+
+### Country-specific pages (no translation needed)
+Pages that only make sense in one language (e.g. a German data protection notice) are simply created in that language's page tree and never submitted for translation. They don't appear in other language trees.
+
+### Language switcher
+- Template tag: `{% get_page_translations as translations %}` (from `i18n_tags`)
+- Only shows languages where a live translation exists
+- Active language highlighted in primary color
+
+---
+
 ## Navbar
 - Items appear when a page is **live** and has **Show in menus** ticked (Promote tab).
 - Dropdown grouping is defined in `NAV_GROUPS` in `home/context_processors.py` — keyed by parent slug.
