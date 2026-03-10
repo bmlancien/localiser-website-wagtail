@@ -62,7 +62,7 @@ Yes: headline text, body copy, CTA label, CTA link, images.
 No: layout, spacing, colours, font sizes, anything only a developer would change.
 
 ### After adding a new block type to a StreamField
-Use a descriptive snake_case key: `horizontal_card`, not `card`. This key is stored in the database and cannot be renamed without a data migration.
+Use a descriptive snake_case key: `horizontal_card`, not `card`. This key is stored in the database JSON and **cannot be renamed without a data migration** — if you rename the key in `models.py` without updating the stored JSON, Wagtail will silently skip those blocks (data is intact but invisible). Always write a data migration when renaming a block key.
 
 ---
 
