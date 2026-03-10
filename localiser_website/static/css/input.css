@@ -41,6 +41,8 @@
   --font-sans: "Roboto", sans-serif;
   --color-primary: #07679F;
   --color-secondary: #D82B50;
+  --color-body-text: #004066;
+  --shadow-card: 0px 0px 16px 0px rgba(107, 180, 217, 0.25);
 }
 
 body {
@@ -48,6 +50,11 @@ body {
 }
 
 @layer components {
+  .card {
+    @apply bg-white rounded-lg p-8 w-full;
+    box-shadow: var(--shadow-card);
+  }
+
   /* Base — always combine with a variant and optionally a size */
   .btn {
     @apply inline-flex items-center gap-2 font-semibold rounded-full transition-colors cursor-pointer;

@@ -1,7 +1,10 @@
 from django.db import models
 
 from wagtail.models import Page
+from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.blocks import StructBlock, CharBlock, RichTextBlock
+from wagtail.images.blocks import ImageChooserBlock
 
 
 BUTTON_VARIANT_CHOICES = [
@@ -10,6 +13,18 @@ BUTTON_VARIANT_CHOICES = [
     ("btn-white",     "White — white bg, blue text"),
     ("btn-outline",   "Outline — blue border and text"),
 ]
+
+
+class CardBlock(StructBlock):
+    supertitle = CharBlock(required=False, label="Text above title (optional)")
+    title      = CharBlock(label="Title")
+    text       = RichTextBlock(label="Body text", features=["bold", "italic", "ul", "ol", "link"])
+    image      = ImageChooserBlock(required=False, label="Image — shown on the left (optional)")
+
+    class Meta:
+        template = "home/blocks/card_block.html"
+        icon = "doc-full"
+        label = "Horizontal card"
 
 
 class HomePage(Page):
@@ -32,6 +47,13 @@ class HomePage(Page):
     )
     hero_cta_subtext = models.CharField(blank=True, max_length=255, verbose_name="Text below CTA")
 
+    cards = StreamField(
+        [("horizontal_card", CardBlock())],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Cards",
+    )
+
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel("hero_title"),
@@ -41,6 +63,7 @@ class HomePage(Page):
             FieldPanel("hero_cta_style"),
             FieldPanel("hero_cta_subtext"),
         ], heading="Hero section"),
+        FieldPanel("cards"),
     ]
 
 

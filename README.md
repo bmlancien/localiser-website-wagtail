@@ -50,6 +50,7 @@ Defined in `@theme` in `input.css` and available as Tailwind utilities everywher
 |---|---|---|
 | `primary` | `#07679F` | `bg-primary`, `text-primary`, `border-primary` |
 | `secondary` | `#D82B50` | `bg-secondary`, `text-secondary`, `border-secondary` |
+| `body-text` | `#004066` | `bg-body-text`, `text-body-text`, `border-body-text` |
 
 ---
 
@@ -94,6 +95,50 @@ npm run watch:css
 # Production build (minified)
 npm run build:css
 ```
+
+## Components & blocks
+
+### Buttons
+
+See the [Buttons](#buttons) section below for full usage.
+
+Quick reference — always combine `.btn` + variant + size:
+
+```html
+<a class="btn btn-primary btn-md">Label</a>
+<a class="btn btn-secondary btn-sm">Label <svg ...></svg></a>
+```
+
+| Variant | Description |
+|---|---|
+| `btn-primary` | Blue background, white text |
+| `btn-secondary` | Pink/red background, white text |
+| `btn-white` | White background, blue text |
+| `btn-outline` | Blue border and text, transparent bg |
+
+| Size | Description |
+|---|---|
+| `btn-md` | Base — `px-6 py-3 text-lg` |
+| `btn-sm` | Small — `px-4 py-2 text-sm` |
+
+---
+
+### Horizontal card (`horizontal_card`)
+
+**Block** — used inside a `StreamField`. Template: `home/templates/home/blocks/card_block.html`.
+
+| Field | Type | Required |
+|---|---|---|
+| Text above title | Short text | No |
+| Title | Short text | Yes |
+| Body text | Rich text | Yes |
+| Image | Image | No — when set, renders on the left side |
+
+CSS class: `.card` — white background, rounded corners, `shadow-card` glow.
+
+Admin: add via the **Cards** StreamField on any page that includes it.
+
+---
 
 ## Adding a section or component
 
