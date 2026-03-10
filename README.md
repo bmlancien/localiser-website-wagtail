@@ -52,66 +52,114 @@ npm run watch:css
 npm run build:css
 ```
 
-## Content blocks & StreamField
+## Adding a section or component
 
-Wagtail's StreamField lets content creators freely add, remove, and reorder content modules on a page — without touching code. Think of it as a lightweight page builder built into the CMS.
+### The principle
 
-### How a block is built (button as example)
+**Design in HTML first, add Python only for what content creators need to edit.**
 
-A block has three parts, each in one place:
-
-**1. Styling — `localiser_website/static/css/input.css`**
-
-Defines the visual variants as named CSS classes. This is the only place styling lives — change it here and it updates everywhere the button is used.
-
-```css
-@layer components {
-  .btn-primary { @apply bg-blue-600 text-white px-6 py-3 rounded-lg ...; }
-  .btn-outline { @apply border-2 border-blue-600 text-blue-600 px-6 py-3 ...; }
-}
-```
-
-**2. Block definition — `home/models.py`**
-
-Defines what fields the block exposes to the content creator (text, link, style dropdown, etc.).
-
-```python
-class ButtonBlock(StructBlock):
-    text  = CharBlock(label="Button text")
-    link  = PageChooserBlock(label="Link to page")
-    style = ChoiceBlock(choices=BUTTON_STYLE_CHOICES, label="Style")
-
-    class Meta:
-        template = "home/blocks/button_block.html"
-```
-
-**3. Template — `home/templates/home/blocks/button_block.html`**
-
-Renders the block's output. `value` holds the fields defined above.
-
-```html
-<a href="{% pageurl value.link %}" class="{{ value.style }}">{{ value.text }}</a>
-```
+Layout, spacing, colours, font sizes — keep those as Tailwind utility classes directly in the template. Only extract text, links, or images that a content creator would realistically need to change into model fields.
 
 ---
 
-### Two ways a dev can use a block
+### Workflow
 
-**Fixed position** — the block is hardcoded into a specific spot in a template. The content creator can only edit its fields, not move or remove it.
+**1. Build the HTML in the template**
 
-**Inside a StreamField** — the block is added to a StreamField alongside other blocks. The content creator can add it anywhere on the page, reorder it, duplicate it, or remove it entirely.
+Use Tailwind utility classes directly. Hardcode placeholder text to start.
 
-To add a new block to the StreamField, register it in the `StreamField` definition in `models.py`, then run a migration:
-
-```python
-content = StreamField([
-    ("rich_text", RichTextBlock()),
-    ("image",     ImageChooserBlock(...)),
-    ("button",    ButtonBlock()),          # ← add new blocks here
-])
+```html
+<!-- home/templates/home/home_page.html -->
+<section class="py-24 px-6 bg-blue-900 text-white">
+  <h1 class="text-5xl font-bold">Your headline here</h1>
+  <p class="text-xl font-light mt-4">Supporting text here</p>
+  <a href="#" class="mt-8 inline-block px-6 py-3 bg-red-500 rounded-full font-bold">
+    CTA button
+  </a>
+</section>
 ```
 
-The block then appears automatically in the admin's block picker — no further changes needed.
+**2. Decide what is editable**
+
+Ask: would a content creator need to change this without a developer? Typical yes: headline text, body copy, CTA label, CTA link, images. Typical no: layout, colours, spacing, font sizes.
+
+**3. Add model fields for editable content**
+
+In `home/models.py`, add only the fields identified above and list them in `content_panels`:
+
+```python
+class HomePage(Page):
+    hero_title    = models.CharField(blank=True, max_length=255)
+    hero_subtitle = models.CharField(blank=True, max_length=500)
+    hero_cta_text = models.CharField(blank=True, max_length=100)
+    hero_cta_link = models.ForeignKey(
+        "wagtailcore.Page", null=True, blank=True,
+        on_delete=models.SET_NULL, related_name="+",
+    )
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel("hero_title"),
+            FieldPanel("hero_subtitle"),
+            FieldPanel("hero_cta_text"),
+            FieldPanel("hero_cta_link"),
+        ], heading="Hero section"),
+    ]
+```
+
+**4. Wire the template to model fields**
+
+Replace hardcoded text with `{{ page.field_name }}`. Wrap optional elements in `{% if %}`:
+
+```html
+<h1 class="text-5xl font-bold">{{ page.hero_title }}</h1>
+<p class="text-xl font-light mt-4">{{ page.hero_subtitle }}</p>
+{% if page.hero_cta_text %}
+  <a href="{% if page.hero_cta_link %}{% pageurl page.hero_cta_link %}{% endif %}"
+     class="mt-8 inline-block px-6 py-3 bg-red-500 rounded-full font-bold">
+    {{ page.hero_cta_text }}
+  </a>
+{% endif %}
+```
+
+**5. Run migrations**
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+The fields appear in the Wagtail admin automatically — no further admin configuration needed.
+
+**6. Rebuild CSS (if you added new Tailwind classes)**
+
+```bash
+npm run build:css
+```
+
+Or just keep `npm run dev` running — it watches and rebuilds automatically.
+
+---
+
+### Reusable CSS classes
+
+For styles used in many places (buttons, badges, tags), define named classes in `input.css` using `@layer components` and `@apply`:
+
+```css
+@layer components {
+  .btn-primary { @apply inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold; }
+}
+```
+
+For one-off sections, put utility classes directly in the template — no need for a named class.
+
+---
+
+### When to use StreamField instead
+
+Use flat model fields (as above) when a page has a **fixed layout** — the sections are always in the same order.
+
+Use `StreamField` when content creators need to **freely add, reorder, or remove sections** (like a flexible landing page builder). StreamField adds complexity, so only reach for it when that flexibility is genuinely needed.
 
 ---
 
