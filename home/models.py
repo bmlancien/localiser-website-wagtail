@@ -3,7 +3,7 @@ from django.db import models
 from wagtail.models import Page
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.blocks import StructBlock, CharBlock, RichTextBlock
+from wagtail.blocks import StructBlock, CharBlock, RichTextBlock, StreamBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 
@@ -25,6 +25,18 @@ class CardBlock(StructBlock):
         template = "home/blocks/card_block.html"
         icon = "doc-full"
         label = "Horizontal card"
+
+
+class ContentStreamBlock(StreamBlock):
+    """Reusable block picker used in free-form content areas."""
+    horizontal_card = CardBlock()
+    rich_text = RichTextBlock(
+        features=["bold", "italic", "ul", "ol", "link", "h2", "h3"],
+        label="Rich text",
+    )
+
+    class Meta:
+        icon = "list-ul"
 
 
 class HomePage(Page):
@@ -54,6 +66,13 @@ class HomePage(Page):
         verbose_name="Cards",
     )
 
+    body = StreamField(
+        ContentStreamBlock(),
+        blank=True,
+        use_json_field=True,
+        verbose_name="Body (free-form content)",
+    )
+
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel("hero_title"),
@@ -64,6 +83,48 @@ class HomePage(Page):
             FieldPanel("hero_cta_subtext"),
         ], heading="Hero section"),
         FieldPanel("cards"),
+        FieldPanel("body"),
+    ]
+
+
+class NewsIndexPage(Page):
+    subpage_types = ["home.NewsPage"]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context["articles"] = (
+            NewsPage.objects.child_of(self).live().order_by("-date")
+        )
+        return context
+
+
+class NewsPage(Page):
+    parent_page_types = ["home.NewsIndexPage"]
+
+    date  = models.DateField()
+    intro = models.CharField(
+        blank=True,
+        max_length=300,
+        help_text="Short summary shown on the listing page",
+    )
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    body = StreamField(
+        ContentStreamBlock(),
+        blank=True,
+        use_json_field=True,
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("date"),
+        FieldPanel("image"),
+        FieldPanel("intro"),
+        FieldPanel("body"),
     ]
 
 

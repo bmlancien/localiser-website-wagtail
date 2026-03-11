@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<section class="w-full bg-white py-24 px-6">
+  <div class="max-w-4xl mx-auto flex flex-col gap-8">
+
+    <div class="flex flex-col gap-3">
+      <p class="text-sm font-medium text-primary">{{ page.date }}</p>
+      <h1 class="font-bold text-4xl text-body-text">{{ page.title }}</h1>
+      {% if page.intro %}
+        <p class="font-light text-2xl text-body-text leading-tight">{{ page.intro }}</p>
+      {% endif %}
+    </div>
+
+    {% if page.image %}
+      {% image page.image fill-1200x500 as img %}
+      <img src="{{ img.url }}" alt="{{ img.alt }}" class="w-full rounded-md object-cover">
+    {% endif %}
+
+    {% if page.body %}
+      <div class="flex flex-col gap-6">
+        {% for block in page.body %}
+          {% include_block block %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <a href="{% pageurl page.get_parent %}" class="btn btn-outline btn-sm self-start">
+      ← Back to news
+    </a>
+
+  </div>
+</section>
+{% endblock %}

@@ -249,7 +249,7 @@ npm run build:css
 
 Use **flat fields** when a page has a fixed layout (sections always in the same order).
 
-Use **StreamField** when content creators need to freely add, reorder, or remove blocks. Add the block to `home/models.py`, create its template in `home/templates/home/blocks/`, and register it in the page's `StreamField`.
+Use **StreamField** when content creators need to freely add, reorder, or remove blocks. New blocks are registered in `ContentStreamBlock` in `home/models.py` — any StreamField using `ContentStreamBlock` automatically gains the new block in its picker. Create the block's template in `home/templates/home/blocks/`.
 
 > **Important:** Never rename a StreamField block key without also updating the stored JSON in the database. The key is stored as-is and Wagtail will silently skip blocks with an unrecognised key.
 
